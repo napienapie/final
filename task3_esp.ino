@@ -1,16 +1,15 @@
+#include <Arduino.h>
 #include <BLEDevice.h>
 #include <BLEServer.h>
 #include <BLEUtils.h>
 #include <BLE2902.h>
 
 //=== Motor Control Pins ===
-#define PIN_PWM 16
-#define PIN_DIR_A 17
-#define PIN_DIR_B 5
-
-// === Encoder Pins ===
-#define PIN_ENC_A 13
-#define PIN_ENC_B 14
+#define PIN_PWM 16    // PWM output (safe for LOLIN32)
+#define PIN_DIR_A 17  // Direction A
+#define PIN_DIR_B 19  // Direction B (changed from 5 to avoid onboard LED conflict)
+#define PIN_ENC_A 13  // Encoder A
+#define PIN_ENC_B 14  // Encoder B
 
 // Motor control constants
 const float PULSES_PER_ROT = 920.0;   // Encoder pulses per rotation
@@ -27,6 +26,29 @@ float kdGain = 5.0;                   // PID derivative coefficient
 #define PID_KP_UUID         "d5e4b2a1-3f8c-4e5b-9a2d-7b3e8c1f0a2b"
 #define PID_KI_UUID         "e6f5c3b2-4f9d-5f6c-ab3e-8c4f9d2e1b3c"
 #define PID_KD_UUID         "f7e6d4c3-5fae-4e7d-9c4f-9d5e0e3f2c4d"
+
+// Map pins to PWM channels for ESP32
+int pinToChannel[40] = {0};
+
+// Custom analogWrite for ESP32
+void analogWrite(uint8_t pin, int value) {
+  const int freq = 10000; // 10 kHz for motor compatibility
+  const int resolution = 8; // 8-bit resolution (0–255)
+  static int nextChannel = 0;
+
+  if (pinToChannel[pin] == 0 && pin != 0) {
+    if (nextChannel >= 16) {
+      return; // Prevent channel overflow
+    }
+    pinToChannel[pin] = nextChannel + 1;
+    ledcSetup(nextChannel, freq, resolution);
+    ledcAttachPin(pin, nextChannel);
+    nextChannel++;
+  }
+
+  int channel = pinToChannel[pin] - 1;
+  ledcWrite(channel, value);
+}
 
 // Motor controller class
 class MotorController {
@@ -189,7 +211,7 @@ void setup() {
   attachInterrupt(digitalPinToInterrupt(PIN_ENC_B), encBInterrupt, CHANGE);
 
   // Set up BLE
-  BLEDevice::init("MotorBLE");
+  BLEDevice::init("LOLIN32_MotorBLE");
   BLEServer *server = BLEDevice::createServer();
   server->setCallbacks(new ConnectionHandler());
   BLEService *service = server->createService(MOTOR_SVC_UUID);
@@ -239,4 +261,5 @@ void setup() {
 void loop() {
   motor.updateSpeed(charActualRpm);
   motor.updatePid();
+  delay(10); // Small delay to prevent BLE stack overload
 }
