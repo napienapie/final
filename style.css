@@ -1,12 +1,14 @@
 html {
-    font-family: Courier Prime, Courier New;
+    font-family: 'Quicksand', 'Poppins', sans-serif;
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&family=Quicksand&display=swap" rel="stylesheet">
+
     display: inline-block;
     text-align: center;
     background-image: linear-gradient(to right, #ffc6e2, #fff1f9, #fff9c4, #cce5ff, #d1f7c4);
 }
 h1 {
     font-size: 1.8rem;
-    color: white;
+    color: black;
     font-weight: bold;
 }
 .topnav {
@@ -40,14 +42,25 @@ body {
     background: linear-gradient(to bottom right, #74ebd5, #acb6e5);
 }
 
-.slider{
+.slider {
     display: flex;
-    flex-direction: column-reverse;
-    margin-bottom: 1rem;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin: 2rem auto;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 10px;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
-.slider:hover{
-    opacity:1;
+
+.slider:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+    opacity: 1;
 }
+
     
 button {
     padding: 14px 20px;
@@ -93,7 +106,7 @@ button {
 }
 
 .gray-label {
-    color: white;
+    color: pink;
     font-size: 1rem;
 }
 
