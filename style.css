@@ -4,7 +4,7 @@ html {
 
     display: inline-block;
     text-align: center;
-    background-image: linear-gradient(to right, #ffc6e2, #fff1f9, #fff9c4, #cce5ff, #d1f7c4);
+    background-image: #ff0000;
 }
 h1 {
     font-size: 1.8rem;
