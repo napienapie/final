@@ -3,12 +3,14 @@
 #include <BLEUtils.h>
 #include <BLE2902.h>
 
-// Hardware configuration
-#define PIN_ENC_A 12        // Encoder A phase
-#define PIN_ENC_B 13        // Encoder B phase
-#define PIN_PWM 16          // Motor PWM signal
-#define PIN_DIR_A 17        // Motor direction A
-#define PIN_DIR_B 5         // Motor direction B
+//=== Motor Control Pins ===
+#define PIN_PWM 16
+#define PIN_DIR_A 17
+#define PIN_DIR_B 5
+
+// === Encoder Pins ===
+#define PIN_ENC_A 13
+#define PIN_ENC_B 14
 
 // Motor control constants
 const float PULSES_PER_ROT = 920.0;   // Encoder pulses per rotation
